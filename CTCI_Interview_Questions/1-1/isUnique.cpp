@@ -1,5 +1,5 @@
 /**
- * Is Unique: Implement an algorithm to determine if a string has all unique characters. What if you cannot use additional data structures?
+ * CTCI 1-1: Is Unique: Implement an algorithm to determine if a string has all unique characters. What if you cannot use additional data structures?
  * Note: you MUST specify what kind of strings. ASCII? Unicode?
  * This code is for ASCII strings
  */
@@ -11,6 +11,8 @@
 //#include <cmath>
 using namespace std;
 
+// time: O(N^2)
+// space: O(1)
 bool bruteForceIsUnique(string s) {
     for (int i = 0; i < s.size(); i++) {
         for (int j = 0; j < s.size(); j++) {
@@ -21,6 +23,8 @@ bool bruteForceIsUnique(string s) {
     return true;
 }
 
+// time: O(N)
+// space: O(N)
 bool isUnique(string s) {
     unordered_set<char> hash_table;
     for (char c : s) {
@@ -33,6 +37,8 @@ bool isUnique(string s) {
     return true;
 }
 
+// time: O(N)
+// space: O(N)? O(1)?
 bool altIsUnique(string s) {
     if (s.size() > 128)
         return false;
@@ -63,6 +69,8 @@ void setBit(char c, unsigned char bit_vector[]) {
     bit_vector[vec_index] |= (1 << (c % 8));
 }
 
+// time: O(N)
+// space: O(N)? O(1)?
 bool optimalIsUnique(string s) {
     if (s.size() > 128)
         return false;
