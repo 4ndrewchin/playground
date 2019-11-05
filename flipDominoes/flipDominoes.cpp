@@ -1,12 +1,16 @@
 // you can use includes, for example:
 // #include <algorithm>
+#include <vector>
+#include <string>
+#include <stdlib.h>
+#include <stdio.h>
 
 // you can write to stdout for debugging purposes, e.g.
 // cout << "this is a debug message" << endl;
 
 // time: O(N)
 // space: O(1)
-int solution(vector<int> &A, vector<int> &B) {
+int my_solution(std::vector<int> &A, std::vector<int> &B) {
     int first = A[0];
     int sec = B[0];
     bool lookForFirst = false;
@@ -16,9 +20,7 @@ int solution(vector<int> &A, vector<int> &B) {
     
     for (unsigned int i = 1; i < A.size(); i++) {
         // abort conditions
-        if ((A[i] != first && A[i] != sec && B[i] != first && B[i] != sec) ||
-            (lookForFirst && A[i] != first && B[i] != first) ||
-            (lookForSec && A[i] != sec && B[i] != sec)){
+        if ((A[i] != first && A[i] != sec && B[i] != first && B[i] != sec) || (lookForFirst && A[i] != first && B[i] != first) || (lookForSec && A[i] != sec && B[i] != sec)){
             return -1;
         }
         
@@ -72,5 +74,19 @@ int solution(vector<int> &A, vector<int> &B) {
         // 6. top matches first, bottom matches sec
             // do nothing
     }
-    return min(rotations, (int)A.size()-rotations);
+    return std::min(rotations, (int)A.size()-rotations);
+}
+
+int main(int argc, char** argv) {
+    std::vector<int> a = {5,7,3,52,8,4,6,9,10,3};
+    std::vector<int> b = {5,7,3,52,8,4,6,9,10,3};
+    
+    for (auto e : a)
+        printf("%d ", e);
+    printf("\n");
+    for (auto e: b)
+        printf("%d ", e);
+    printf("\n");
+
+    printf("flips: %d\n", my_solution(a, b));
 }
