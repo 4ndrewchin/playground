@@ -46,18 +46,24 @@ int convert(char* n, char* result, int out_base) {
 
    if (out_base == 10) {
       sprintf(result+startIndexW, "%ld", decVal);
+      // TODO: should zero terminate result here
       return 0;
    }
 
-   long res = 0;
+   // TODO: this is not general nor memory efficient
+   char res[100];
+   int index = 0;
    digit = 0;
    while (decVal > 0) {
-      res += (decVal % out_base) * pow(10, digit);
+      char c = hexVal(decVal % out_base);
+      res[index] = c;
       decVal /= out_base;
+      index++;
       digit++;
    }
-
-   sprintf(result+startIndexW, "%ld", res);
+   res[index] = '\0';
+   // TODO: reverse res for correct answer
+   strncpy(result+startIndexW, res, strlen(res));
 
    return 0;
 }
@@ -121,5 +127,44 @@ int digitVal(char c) {
          return 15;
       default:
          return -1;
+   }
+}
+
+char hexVal(int i) {
+   switch (i) {
+      case 0:
+         return '0';
+      case 1:
+         return '1';
+      case 2:
+         return '2';
+      case 3:
+         return '3';
+      case 4:
+         return '4';
+      case 5:
+         return '5';  
+      case 6:
+         return '6';
+      case 7:
+         return '7';
+      case 8:
+         return '8';
+      case 9:
+         return '9';
+      case 10:
+         return 'a';
+      case 11:
+         return 'b';
+      case 12:
+         return 'c';
+      case 13:
+         return 'd';
+      case 14:
+         return 'e';
+      case 15:
+         return 'f';
+      default:
+         return ' ';
    }
 }

@@ -23,8 +23,12 @@ int convert(char* n, char* result, int out_base);
 // hex      0x111
 int detectBase(char* n);
 
-// return int value of hex digit
+// return int value of hex digit |c|
 // on error, return -1
 int digitVal(char c);
+
+// return char value of hex number |i|
+// on error, return ' '
+char hexVal(int i);
 
 #endif
