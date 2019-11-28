@@ -1,23 +1,35 @@
 //=======================================
 //    num_conversion.c
-//    Andrew Chin    Nov 26, 2019
+//    Andrew Chin    Nov 28, 2019
 //=======================================
 
 #include "num_conversion.h"
 
+// TODO: handle negative numbers
+// TODO: handle special 0 case
 int convert(char* n, char* result, int out_base) {
    int in_base = detectBase(n);
-
-   if (in_base == out_base) {
-      strncpy(result, n, strlen(n));
-      return 0;
-   }
 
    int startIndexR = 0;
    if (in_base == 2 || in_base == 16) {
       startIndexR = 2;
    } else if (in_base == 8) {
       startIndexR = 1;
+   }
+
+   if (startIndexR == strlen(n))
+      return -1;
+
+   for (int i = startIndexR; i < strlen(n); i++) {
+      if ( (in_base == 16 && !isxdigit(n[i])) ||
+            (in_base != 16 &&!isdigit(n[i])) )
+         return -1;
+   }
+
+   if (in_base == out_base) {
+      strncpy(result, n, strlen(n));
+      strncpy(result+strlen(n), "\0", 1);
+      return 0;
    }
 
    int startIndexW = 0;
@@ -28,11 +40,6 @@ int convert(char* n, char* result, int out_base) {
    } else if (out_base == 8) {
       startIndexW = 1;
       result[0] = '0';
-   }
-
-   for (int i = startIndexR; i < strlen(n); i++) {
-      if (!isxdigit(n[i]))
-         return -1;
    }
 
    // if base = x
@@ -46,7 +53,7 @@ int convert(char* n, char* result, int out_base) {
 
    if (out_base == 10) {
       sprintf(result+startIndexW, "%ld", decVal);
-      // TODO: should zero terminate result here
+      // TODO: should we zero terminate result?
       return 0;
    }
 
@@ -62,8 +69,12 @@ int convert(char* n, char* result, int out_base) {
       digit++;
    }
    res[index] = '\0';
-   // TODO: reverse res for correct answer
-   strncpy(result+startIndexW, res, strlen(res));
+   int offset = 0;
+   for (int i = strlen(res)-1; i >= 0; i--) {
+      result[startIndexW+offset] = res[i];
+      offset++;
+   }
+   result[startIndexW+offset] = '\0';
 
    return 0;
 }
@@ -73,18 +84,18 @@ int convert(char* n, char* result, int out_base) {
 // octal    0111
 // hex      0x111
 int detectBase(char* n) {
-   if (strlen(n) >= 2 && n[0] == '0') {   
-      //if (n[0] == '0') {
+   // TODO: possible out-of-bounds accesses here?
+   if (strlen(n) > 1 && n[0] == '0') {   
          if (n[1] == 'b')
             return 2;
          else if (n[1] == 'x')
             return 16;
          return 8;
-      //}
    }
    return 10;
 }
 
+// TODO: better way to do this?
 int digitVal(char c) {
    switch (c) {
       case '0':
