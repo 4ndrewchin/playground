@@ -9,8 +9,8 @@
 #include "num_conversion.h"
 
 int main(void) {
-   char input[100] = "4";
-   int desired_base = 2;
+   char input[100] = "0b10101011";
+   int desired_base = 16;
    char output[100];
    if (convert(input, output, desired_base) != 0) {
       printf("ERROR\n\r");

@@ -6,11 +6,6 @@
 #include "num_conversion.h"
 
 int convert(char* n, char* result, int out_base) {
-   for (int i = 0; i < strlen(n); i++) {
-      if (!isxdigit(n[i]))
-         return -1;
-   }
-
    int in_base = detectBase(n);
 
    if (in_base == out_base) {
@@ -18,27 +13,51 @@ int convert(char* n, char* result, int out_base) {
       return 0;
    }
 
-   int startIndex = 0;
+   int startIndexR = 0;
    if (in_base == 2 || in_base == 16) {
-      startIndex = 2;
-      result[0] = '0';
-      result[1] = (in_base == 2) ? 'b' : 'x';
+      startIndexR = 2;
+   } else if (in_base == 8) {
+      startIndexR = 1;
    }
-   else if (in_base == 8) {
-      startIndex = 1;
+
+   int startIndexW = 0;
+   if (out_base == 2 || out_base == 16) {
+      startIndexW = 2;
+      result[0] = '0';
+      result[1] = (out_base == 2) ? 'b' : 'x';
+   } else if (out_base == 8) {
+      startIndexW = 1;
       result[0] = '0';
    }
-   
+
+   for (int i = startIndexR; i < strlen(n); i++) {
+      if (!isxdigit(n[i]))
+         return -1;
+   }
 
    // if base = x
    //    dec val = (digit1 * x^0) + (digit2 * x^1) + ...
    long decVal = 0;
-   for (int i = strlen(n)-1; i >= startIndex; i--) {
-      int digit = strlen(n) - 1;
-      decVal += digitVal(n[i]) * pow(in_base, digit-1);
+   int digit = 0;
+   for (int i = strlen(n)-1; i >= startIndexR; i--) {
+      decVal += digitVal(n[i]) * pow(in_base, digit);
+      digit++;
    }
 
-   sprintf(result+startIndex, "%l", decVal);
+   if (out_base == 10) {
+      sprintf(result+startIndexW, "%ld", decVal);
+      return 0;
+   }
+
+   long res = 0;
+   digit = 0;
+   while (decVal > 0) {
+      res += (decVal % out_base) * pow(10, digit);
+      decVal /= out_base;
+      digit++;
+   }
+
+   sprintf(result+startIndexW, "%ld", res);
 
    return 0;
 }
